@@ -4,4 +4,10 @@ class Document:
         self.url = url
         self.desc = desc
 
+    def print_doc(self):
+        print("title: " + self.title)
+        print("url: " + self.url)
+        print("desc: " + self.desc)
+        print("")
+
         # Constructed with basic fields. Add more if needed
