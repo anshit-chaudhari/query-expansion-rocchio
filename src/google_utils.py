@@ -1,17 +1,10 @@
 from typing import List
-
 # Originally this line was "from src.document .."
 # Deleted "src." because it cannot be found. Now the code
 # works without error. 
 from document import Document
-
 import json
-
-import pprint
-
 from googleapiclient.discovery import build
-
-
 
 def get_results(query: List[str]) -> List[Document]:
     """
@@ -34,6 +27,8 @@ def get_results(query: List[str]) -> List[Document]:
 
     list_of_results = res['items']
 
+    list_of_results = list_of_results[0:10]
+
     for item in list_of_results:
       title = item["title"]
       url = item["link"]
@@ -42,33 +37,5 @@ def get_results(query: List[str]) -> List[Document]:
       doc = Document(title, url, desc)
 
       ret.append(doc)
-
-
-    for item in ret:
-      item.print_doc()
       
     return ret
-
-    # json_object = json.loads(json.dumps(res['items'], indent = 4))
-
-    # json_formatted_str = json.dumps(json_object, indent=2)
-
-    # print(json_formatted_str)
-
-
-
-
-
-
-
-# def main():
-#   # Build a service object for interacting with the API. Visit
-#   # the Google APIs Console <http://code.google.com/apis/console>
-#   # to get an API key for your own application.
-
-#   que = ["image", "processing"]
-
-#   get_results(que)
-
-# if __name__ == '__main__':
-#   main()
