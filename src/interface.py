@@ -1,19 +1,13 @@
 from typing import List
 
-from src.document import Document
-
-
-class Config:
-    def __init__(self, precision: float, client_key: str, engine_key: str):
-        self.precision = precision
-        self.client_key = client_key
-        self.engine_key = engine_key
+from .config import Config
+from .document import Document
+from .google_utils import get_results
 
 
 class Session:
-    def __init__(self, config: Config, initial_query: List[str]):
+    def __init__(self, config: Config):
         self.config = config
-        self.initial_query = initial_query
 
     def __run_iteration(self, query: List[str]) -> (float, List[Document]):
         """
@@ -21,11 +15,12 @@ class Session:
         """
 
         relevant_docs = []
-        docs = []
-        # docs = fetch documents from Google utils
+        docs = get_results(query, self.config)
 
         for i, doc in enumerate(docs):
-            display_result(i, doc)
+            print('Result {}'.format(i))
+            doc.print()
+            print("-----")
             collect_feedback(relevant_docs, doc)
 
         # TODO: write logic to exclude non-html pages from this count
@@ -34,15 +29,13 @@ class Session:
         return precision, relevant_docs
 
     def run(self):
+        query = input("Please input your query").split(" ")
+        precision = float(input("What is your desired precision?"))
+        cur_precision = 0
 
-
-def display_result(i: int, doc: Document):
-    print('Result {}'.format(i))
-    print('[')
-    print(' URL: {}'.format(doc.url))
-    print(' Title: {}'.format(doc.title))
-    print(' Summary: {}'.format(doc.desc))
-    print(']')
+        while cur_precision < precision:
+            cur_precision, relevant_docs = self.__run_iteration(query)
+            # query = brain_func(relevant_docs)
 
 
 def collect_feedback(relevant_docs: List[Document], doc: Document):
