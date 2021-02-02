@@ -90,7 +90,7 @@ def brain_func(relevant_docs, irrelevant_docs, query):
 
   # ============================================================================
   # For now, read relevant_docs and irrelevant_docs from data.txt
-  with open('data.json') as f:
+  with open('temp.json') as f:
     data = json.load(f)
 
   relevant_docs = {}
@@ -192,6 +192,7 @@ def brain_func(relevant_docs, irrelevant_docs, query):
   for key in q_vec.keys():
     alpha_q_vec[key] = q_vec[key] * a
 
+  # second term in the update formula
   beta_rel = {}
 
   sum_of_rel = {}
@@ -202,8 +203,53 @@ def brain_func(relevant_docs, irrelevant_docs, query):
     for key_cur in cur_vec:
       if key_cur in sum_of_rel.keys():
         sum_of_rel[key_cur] = sum_of_rel[key_cur] + cur_vec[key_cur]
+      else:
+        sum_of_rel[key_cur] = cur_vec[key_cur]
 
+  for key in sum_of_rel.keys():
+    beta_rel[key] = (sum_of_rel[key] * b) / len(relevant_docs)
 
+  # third term in the update formula
+  gamma_irrel = {}
+
+  sum_of_irrel = {}
+  for key in irrel_vecs.keys():
+    cur_vec = irrel_vecs[key]
+
+    # cur_vec is the vector for current irrel doc
+    for key_cur in cur_vec:
+      if key_cur in sum_of_irrel.keys():
+        sum_of_irrel[key_cur] = sum_of_irrel[key_cur] + cur_vec[key_cur]
+      else:
+        sum_of_irrel[key_cur] = cur_vec[key_cur]
+
+  for key in sum_of_irrel.keys():
+    gamma_irrel[key] = (sum_of_irrel[key] * b) / len(irrelevant_docs)
+  
+  # print(beta_rel)
+  # print(gamma_irrel)
+
+  new_vec_q = {}
+  for key in alpha_q_vec.keys():
+    new_vec_q[key] = alpha_q_vec[key] + beta_rel[key] - gamma_irrel[key]
+  
+  # print(new_vec_q)
+
+  dif_vec = {}
+  for key in alpha_q_vec.keys():
+    dif_vec[key] = new_vec_q[key] - q_vec[key]
+
+  # sort dif_vec by value
+  new_dif_vec = {k: v for k, v in sorted(dif_vec.items(), key=lambda item: item[1], reverse=True)}
+
+  # print(new_dif_vec)
+
+  for key in new_dif_vec.keys():
+    if not (key in query):
+      query.append(key)
+      break
+
+  print(query)
 
   return query
 
