@@ -87,6 +87,20 @@ def brain_func(relevant_docs, irrelevant_docs, query):
   # and the documents. 
 
   # ID of file is preserved throughout
+  new_relevant_docs = {}
+  index = 0
+  for doc in relevant_docs:
+    new_relevant_docs[index] = doc.Summary
+    index += 1
+  
+  relevant_docs = new_relevant_docs
+
+  new_irrelevant_docs = {}
+  for doc in irrelevant_docs:
+    new_irrelevant_docs[index] = doc.Summary
+    index += 1
+  
+  irrelevant_docs = new_irrelevant_docs
 
 
   # ============================================================================
