@@ -1,7 +1,6 @@
 
 # Resource: https://towardsdatascience.com/natural-language-processing-feature-engineering-using-tf-idf-e8b9d00e7e76
 
-
 from typing import List
 
 from config import Config
@@ -79,13 +78,15 @@ def get_results(query: List[str], config: Config) -> List[Document]:
 
 
 def brain_func(relevant_docs, irrelevant_docs, query):
+  # a, b, r are the constants in the final formula 
+  # alpha betta gamma
   a = 1
   b = 0.75
   r = 0.25
   # First, create a set of all terms that appear in the query 
   # and the documents. 
 
-  # ID of file is preserved throughout 
+  # ID of file is preserved throughout
 
 
   # ============================================================================
@@ -187,6 +188,7 @@ def brain_func(relevant_docs, irrelevant_docs, query):
     irrel_vecs[key] = computeTFIDF(tf_vec_irrel[key], idfs)
 
   # Now that we have all the vectors we need, compute the new vector for the new query.
+  # new_q_vec = alpha * old q_vector + beta * __ - gamma * ___
 
   alpha_q_vec = {}
   for key in q_vec.keys():
@@ -277,4 +279,3 @@ if __name__ == '__main__':
     # with open('data.txt', 'w') as outfile:
     #   json.dump(new_ret, outfile, indent = 4)
 
-    
