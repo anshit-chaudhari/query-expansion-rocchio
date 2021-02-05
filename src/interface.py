@@ -35,7 +35,7 @@ class Session:
 
         while cur_precision < precision:
             cur_precision, relevant_docs = self.__run_iteration(query)
-            # query = brain_func(relevant_docs)
+            # query = brain_func(relevant_docs, irrelevant_docs, query)
 
 
 def collect_feedback(relevant_docs: List[Document], doc: Document):
