@@ -5,6 +5,8 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from pprint import pprint
 import json
 import numpy as np
+import nltk
+
 
 def vectorize(text_list):
     vectorizer = TfidfVectorizer()
@@ -17,12 +19,14 @@ def vectorize(text_list):
 def createList(r1, r2): 
     return np.arange(r1, r2+1, 1)
 
+# print(len(rellll))
+
 def brain_func(relevant_docs, irrelevant_docs, query):
     # a, b, r are the constants in the final formula
     # alpha betta gamma
     a = 1
     b = 0.75
-    r = 0.15
+    r = 0.25
 
     if query == []:
         return []
@@ -30,34 +34,41 @@ def brain_func(relevant_docs, irrelevant_docs, query):
     # and the documents.
 
     # ID of file is preserved throughout
-    # new_relevant_docs = {}
-    # index = 0
-    # for doc in relevant_docs:
-    #     new_relevant_docs[index] = doc.title
-    #     index += 1
+    # =============================================================================
+    new_relevant_docs = []
+    for doc in relevant_docs:
+        new_relevant_docs.append(doc.title )
 
-    # relevant_docs = new_relevant_docs
+    relevant_docs = new_relevant_docs
 
-    # new_irrelevant_docs = {}
-    # for doc in irrelevant_docs:
-    #     new_irrelevant_docs[index] = doc.title
-    #     index += 1
+    new_irrelevant_docs = []
+    for doc in irrelevant_docs:
+        new_irrelevant_docs.append(doc.title )
 
-    # irrelevant_docs = new_irrelevant_docs
+    irrelevant_docs = new_irrelevant_docs
+    # =============================================================================
+
+    # data = {}
+
+    # data["rel"] = relevant_docs
+    # data["irrel"] = irrelevant_docs
+
+    # with open('data.json', 'w') as outfile:
+    #     # print("herereeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
+    #     json.dump(data, outfile)
+
+    # pprint(relevant_docs)
+    # pprint(irrelevant_docs)
 
     #
     # # ============================================================================
     # For now, read relevant_docs and irrelevant_docs from data.txt
-    with open('temp.json') as f:
-        data = json.load(f)
+    # with open('data.json') as f:
+    #     data = json.load(f)
     
-    relevant_docs = []
-    relevant_docs.append(data["6"])
+    # relevant_docs = data["rel"]
     
-    irrelevant_docs = []
-    for i in range(0, 10):
-        if not i == 6:
-            irrelevant_docs.append(data[str(i)])
+    # irrelevant_docs = data["irrel"]
     
     # print(irrelevant_docs)
     # print(relevant_docs)
@@ -67,10 +78,39 @@ def brain_func(relevant_docs, irrelevant_docs, query):
     # put all docs in one list, record the coords. 
     concat_query = [' '.join(query)]
 
+    stop_words = nltk.corpus.stopwords.words('english')
+
     # for relevant docs, irrelevant docs, and query, 
     # record all the row indexes in the final tf_idf vector.
+    # print(relevant_docs[0])
     all_list = relevant_docs + irrelevant_docs + concat_query
+    # print(all_list[0])
+
+    # remove stop words from each element in the list (a long text)
+    # then make the list again.
+
+    new_all_list = []
+    for text in all_list:
+        text = text.lower()
+        text = ''.join(e for e in text if e.isalnum() or e == ' ')
+        words_list = text.split(" ")
+        new_words_list = []
+        for word in words_list:
+            if not (word in stop_words):
+                new_words_list.append(word)
+
+        new_all_list.append(" ".join(new_words_list))
+    
+    all_list = new_all_list
+
+
+
+
     rel_range = createList(0, len(relevant_docs)-1)
+    print(all_list[0])
+    # print(all_list[1])
+    # print(all_list[2])
+    # print(rel_range)
     irrel_range = createList(len(relevant_docs), len(irrelevant_docs) + len(relevant_docs) - 1)
 
     # tf-idf vectors
@@ -102,21 +142,29 @@ def brain_func(relevant_docs, irrelevant_docs, query):
 
     dif_vec = new_query_vec - old_query_vec
 
-    for key in dif_vec.keys():
-        if dif_vec[key] > 0:
+
+    new_dif_vec = {k: v for k, v in sorted(dif_vec.items(), key=lambda item: item[1], reverse=True)}
+
+    for key in new_dif_vec.keys():
+        if new_dif_vec[key] > 0:
             pprint(key + " " + str(dif_vec[key]))
 
-    # REMOVE STOP WORDS
+    for key in new_dif_vec.keys():
+        if not (key in query):
+            query.append(key)
+            break
+
+    print(query)
+    return query
+
+
+# def main():
+#     brain_func([], [], ["per", "se"])
+
+# if __name__ == "__main__":
+#     main()
 
 
 
-
-
-
-
-
-def main():
-    brain_func([], [], ["what", "the", "fuck"])
-
-if __name__ == "__main__":
-    main()
+# NOTE: the algorithm only uses title. Works well. Idea: decide if you want to use title or whole based
+# on accuracy score

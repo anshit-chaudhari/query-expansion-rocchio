@@ -3,7 +3,7 @@ from typing import List
 from .config import Config
 from .document import Document
 from .google_utils import get_results
-from .brain import brain_func
+from .brain_new import brain_func
 
 
 class Session:
