@@ -1,4 +1,6 @@
+
 import math
+from sklearn.feature_extraction.text import TfidfVectorizer
 
 
 def computeTFIDF(tfBagOfWords, idfs):
@@ -54,6 +56,14 @@ def brain_func(relevant_docs, irrelevant_docs, query):
         index += 1
 
     irrelevant_docs = new_irrelevant_docs
+
+    # print("I'm herererererererererererererererer")
+    # vectorizer = TfidfVectorizer()
+    # vectors = vectorizer.fit_transform([documentA, documentB])
+    # feature_names = vectorizer.get_feature_names()
+    # dense = vectors.todense()
+    # denselist = dense.tolist()
+    # df = pd.DataFrame(denselist, columns=feature_names)
     #
     # # ============================================================================
     # # For now, read relevant_docs and irrelevant_docs from data.txt
