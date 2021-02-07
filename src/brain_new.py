@@ -21,7 +21,7 @@ def createList(r1, r2):
 
 # print(len(rellll))
 
-def brain_func(relevant_docs, irrelevant_docs, query):
+def brain_func(relevant_docs, irrelevant_docs, query, cur_precision):
     # a, b, r are the constants in the final formula
     # alpha betta gamma
     a = 1
@@ -37,13 +37,15 @@ def brain_func(relevant_docs, irrelevant_docs, query):
     # =============================================================================
     new_relevant_docs = []
     for doc in relevant_docs:
-        new_relevant_docs.append(doc.title )
+
+        new_relevant_docs.append(doc.title  + " " + doc.desc )
 
     relevant_docs = new_relevant_docs
 
     new_irrelevant_docs = []
     for doc in irrelevant_docs:
-        new_irrelevant_docs.append(doc.title )
+
+        new_irrelevant_docs.append(doc.title  + " " + doc.desc )
 
     irrelevant_docs = new_irrelevant_docs
     # =============================================================================
@@ -168,3 +170,5 @@ def brain_func(relevant_docs, irrelevant_docs, query):
 
 # NOTE: the algorithm only uses title. Works well. Idea: decide if you want to use title or whole based
 # on accuracy score
+
+# OR: calculate a score for title and body and combine.

@@ -45,7 +45,7 @@ class Session:
                 print("No relevant documents found. Terminating the program")
                 break
 
-            query = brain_func(relevant_docs, irrelevant_docs, query)
+            query = brain_func(relevant_docs, irrelevant_docs, query, cur_precision)
 
 
 def collect_feedback(relevant_docs: List[Document], irrelevant_docs: List[Document], doc: Document):
