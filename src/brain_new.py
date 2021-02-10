@@ -1,11 +1,11 @@
-
-
 import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
+from nltk.tokenize import word_tokenize
 from pprint import pprint
-import json
 import numpy as np
 import nltk
+
+stop_words = nltk.corpus.stopwords.words('english')
 
 
 def vectorize(text_list):
@@ -16,10 +16,34 @@ def vectorize(text_list):
     denselist = dense.tolist()
     return pd.DataFrame(denselist, columns=feature_names)
 
-def createList(r1, r2): 
-    return np.arange(r1, r2+1, 1)
+
+def createList(r1, r2):
+    return np.arange(r1, r2 + 1, 1)
+
 
 # print(len(rellll))
+
+def clean_text(text):
+    text = text.lower()
+
+    # split into words
+    tokens = word_tokenize(text)
+
+    # remove all tokens that are not alphabetic and are stopwords
+    words = [word for word in tokens if word.isalpha() and word not in stop_words]
+
+    return " ".join(words)
+
+    # text = text.lower()
+    # text = ''.join(e for e in text if e.isalnum() or e == ' ')
+    # words_list = text.split(" ")
+    # new_words_list = []
+    # for word in words_list:
+    #     if not (word in stop_words):
+    #         new_words_list.append(word)
+    #
+    # new_all_list.append(" ".join(new_words_list))
+
 
 def brain_func(relevant_docs, irrelevant_docs, query, cur_precision):
     # a, b, r are the constants in the final formula
@@ -37,15 +61,13 @@ def brain_func(relevant_docs, irrelevant_docs, query, cur_precision):
     # =============================================================================
     new_relevant_docs = []
     for doc in relevant_docs:
-
-        new_relevant_docs.append(doc.title  + " " + doc.desc )
+        new_relevant_docs.append(doc.title + " " + doc.desc)
 
     relevant_docs = new_relevant_docs
 
     new_irrelevant_docs = []
     for doc in irrelevant_docs:
-
-        new_irrelevant_docs.append(doc.title  + " " + doc.desc )
+        new_irrelevant_docs.append(doc.title + " " + doc.desc)
 
     irrelevant_docs = new_irrelevant_docs
     # =============================================================================
@@ -67,15 +89,14 @@ def brain_func(relevant_docs, irrelevant_docs, query, cur_precision):
     # For now, read relevant_docs and irrelevant_docs from data.txt
     # with open('data.json') as f:
     #     data = json.load(f)
-    
+
     # relevant_docs = data["rel"]
-    
+
     # irrelevant_docs = data["irrel"]
-    
+
     # print(irrelevant_docs)
     # print(relevant_docs)
     # # ============================================================================
-    
 
     # put all docs in one list, record the coords. 
     concat_query = [' '.join(query)]
@@ -93,23 +114,23 @@ def brain_func(relevant_docs, irrelevant_docs, query, cur_precision):
 
     new_all_list = []
     for text in all_list:
-        text = text.lower()
-        text = ''.join(e for e in text if e.isalnum() or e == ' ')
-        words_list = text.split(" ")
-        new_words_list = []
-        for word in words_list:
-            if not (word in stop_words):
-                new_words_list.append(word)
+        # text = text.lower()
+        # text = ''.join(e for e in text if e.isalnum() or e == ' ')
+        # words_list = text.split(" ")
+        # new_words_list = []
+        # for word in words_list:
+        #     if not (word in stop_words):
+        #         new_words_list.append(word)
+        #
+        # new_all_list.append(" ".join(new_words_list))
 
-        new_all_list.append(" ".join(new_words_list))
-    
+        new_all_list.append(clean_text(text))
+
     all_list = new_all_list
 
-
-
-
-    rel_range = createList(0, len(relevant_docs)-1)
-    print(all_list[0])
+    rel_range = createList(0, len(relevant_docs) - 1)
+    pprint(all_list)
+    # print(all_list[0])
     # print(all_list[1])
     # print(all_list[2])
     # print(rel_range)
@@ -120,22 +141,22 @@ def brain_func(relevant_docs, irrelevant_docs, query, cur_precision):
 
     # Now we calculate the three terms in the Rocchio algorithm
     # new_q = a * old_q + b * rel - r * irrel
-    #(tf_idf.shape[0]-1)
-    old_query_vec = tf_idf.iloc[tf_idf.shape[0]-1]
+    # (tf_idf.shape[0]-1)
+    old_query_vec = tf_idf.iloc[tf_idf.shape[0] - 1]
     first_term = a * old_query_vec
 
-    # initialize rel vector to be the first relevant doc vector
-    # then add the rest
-    rel_vector = tf_idf.iloc[rel_range[0]]
-    for i in rel_range[1:]:
+    # initialize rel vector to zero and then add the rest
+    rel_vector = np.zeros((tf_idf.shape[1]))
+    for i in rel_range:
         rel_vector = rel_vector + tf_idf.iloc[i]
 
+    # TODO:
     second_term = b * (rel_vector / len(rel_range))
 
     # initialize irrel vector to be the first irrelevant doc vector
     # then add the rest
-    irrel_vector = tf_idf.iloc[irrel_range[0]]
-    for i in irrel_range[1:]:
+    irrel_vector = np.zeros((tf_idf.shape[1]))
+    for i in irrel_range:
         irrel_vector = irrel_vector + tf_idf.iloc[i]
 
     third_term = r * (irrel_vector / len(irrel_range))
@@ -143,7 +164,6 @@ def brain_func(relevant_docs, irrelevant_docs, query, cur_precision):
     new_query_vec = first_term + second_term - third_term
 
     dif_vec = new_query_vec - old_query_vec
-
 
     new_dif_vec = {k: v for k, v in sorted(dif_vec.items(), key=lambda item: item[1], reverse=True)}
 
@@ -159,13 +179,11 @@ def brain_func(relevant_docs, irrelevant_docs, query, cur_precision):
     print(query)
     return query
 
-
 # def main():
 #     brain_func([], [], ["per", "se"])
 
 # if __name__ == "__main__":
 #     main()
-
 
 
 # NOTE: the algorithm only uses title. Works well. Idea: decide if you want to use title or whole based

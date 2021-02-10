@@ -9,6 +9,6 @@ http://www.cs.columbia.edu/~gravano/cs6111/proj1.html
 
 ```{python}
 pip install -r requirements.txt
-python3 -m nltk.downloader stopwords
+python3 -m nltk.downloader stopwords punkt
 python run.py
 ```
