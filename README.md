@@ -5,15 +5,23 @@ Advanced Databases Project 1
 
 http://www.cs.columbia.edu/~gravano/cs6111/proj1.html
 
-### Install and Run
+### Install
 
+After cloning this project on your machine, you should run the below commands
+
+```{bash}
+pip3 install -r requirements.txt
+python3 -m nltk.downloader stopwords punkt
+```
+
+### Run
+
+```{bash}
+python3 run.py <API Key> <Engine Key> <Precision> <Query>
+```
+
+Use the API and Engine Key below
 ```
 API Key: AIzaSyAXqKtB1mQUHZmrFmMW_EhNK3JAyWRAK9o
 Engine Key: 2c6600e3a2ae8bcd0
-```
-
-```{python}
-pip3 install -r requirements.txt
-python3 -m nltk.downloader stopwords punkt
-python3 run.py <API Key> <Engine Key> <Precision> <Query>
 ```
