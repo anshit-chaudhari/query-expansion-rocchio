@@ -7,7 +7,7 @@ http://www.cs.columbia.edu/~gravano/cs6111/proj1.html
 
 ### Install
 
-After cloning this project on your machine, you should run the below commands
+After cloning this project on your machine, you should run the commands below
 
 ```{bash}
 pip3 install -r requirements.txt
