@@ -19,6 +19,9 @@ class Session:
         irrelevant_docs = []
         docs = get_results(query, self.config)
 
+        print("Google Search Results:")
+        print("===========================")
+
         for i, doc in enumerate(docs):
             print('Result {}'.format(i + 1))
             doc.print()
@@ -32,9 +35,12 @@ class Session:
     def run(self):
         query = self.config.query
         precision = self.config.precision
+        print("Query: ", " ".join(query))
+        print("Precision: ", precision)
 
         while True:
             cur_precision, relevant_docs, irrelevant_docs = self.__run_iteration(query)
+            print("===========================")
             print("FEEDBACK SUMMARY")
             print("Query: ", " ".join(query))
             print("Precision: ", cur_precision)
