@@ -13,7 +13,7 @@ Engine Key: 2c6600e3a2ae8bcd0
 ```
 
 ```{python}
-pip install -r requirements.txt
-python -m nltk.downloader stopwords punkt
-python run.py <API Key> <Engine Key> <Precision> <Query>
+pip3 install -r requirements.txt
+python3 -m nltk.downloader stopwords punkt
+python3 run.py <API Key> <Engine Key> <Precision> <Query>
 ```
