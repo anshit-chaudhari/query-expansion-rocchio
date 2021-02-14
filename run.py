@@ -4,7 +4,7 @@ from src import Config, Session
 
 if __name__ == '__main__':
     if len(sys.argv) != 5:
-        raise Exception("Usage: python run.py <API Key> <Engine Key> <Precision> <Query>")
+        raise Exception("Usage: python run.py <API Key> <Engine Key> <Precision> <Query in double quotation marks>")
 
     config = Config(
         dev_key=sys.argv[1],
