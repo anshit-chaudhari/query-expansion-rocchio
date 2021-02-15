@@ -29,7 +29,6 @@ def get_results(query: List[str], config: Config) -> List[Document]:
 
     if len(list_of_results) < 10:
         raise Exception("Error: Google did not return enough files to proceed. Program terminated.")
-        return []
 
     list_of_results = list_of_results[0:10]
 

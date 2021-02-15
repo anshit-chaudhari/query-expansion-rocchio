@@ -82,17 +82,24 @@ class Session:
 
 
 def collect_feedback(relevant_docs: List[Document], irrelevant_docs: List[Document], doc: Document):
-    f = input("Relevant (Y/N)?")
+    if doc.title and doc.desc:
+        f = input("Relevant (Y/N)?")
 
-    while True:
-        if f.lower() == 'y':
-            relevant_docs.append(doc)
-            return 
+        while True:
+            if f.lower() == 'y':
+                relevant_docs.append(doc)
+                return
 
-        elif f.lower() == 'n':
-            irrelevant_docs.append(doc)
-            return
-        
-        else: 
-            print("Please answer \"y\" or \"n\".")
-            f = input("Relevant (Y/N)?")
+            elif f.lower() == 'n':
+                irrelevant_docs.append(doc)
+                return
+
+            else:
+                print("Please answer \"y\" or \"n\".")
+                f = input("Relevant (Y/N)?")
+
+    else:
+        # We found out that non-html pages do not have description (snippet). Also, without description (snippet) we
+        # cannot meaningfully represent a page, hence we decided to ignore such pages in our computation. Thus, only the
+        # pages with non-empty title and description will be processed. That said, such pages are extremely rare.
+        print("Either/Both of title and description are missing. Not using this page in computation.")
