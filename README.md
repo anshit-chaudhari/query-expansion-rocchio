@@ -1,6 +1,8 @@
 # Query Expansion using Rocchio's Algorithm
 
-This module iteratively expands the user-query using relevance feedback with Rocchio's algorithm until it reaches the desired precision.
+This module iteratively expands the user-query using relevance feedback with Rocchio's algorithm until it reaches the desired precision. 
+
+Note: This project was completed in a span of two weeks and hence some parts might not be production grade. Please consider refactoring the code if you intend to use this in production.
 
 ### Detailed Project Description
 
