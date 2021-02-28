@@ -1,7 +1,8 @@
-# adv-db-proj-1
-Advanced Databases Project 1
+# Query Expansion using Rocchio's Algorithm
 
-### Project Description
+This module iteratively expands the user-query using relevance feedback with Rocchio's algorithm until it reaches the desired precision.
+
+### Detailed Project Description
 
 http://www.cs.columbia.edu/~gravano/cs6111/proj1.html
 
@@ -18,12 +19,6 @@ python3 -m nltk.downloader stopwords punkt
 
 ```{bash}
 python3 run.py <API Key> <Engine Key> <Precision> <Query>
-```
-
-Use the API and Engine Key below
-```
-API Key: AIzaSyAXqKtB1mQUHZmrFmMW_EhNK3JAyWRAK9o
-Engine Key: 2c6600e3a2ae8bcd0
 ```
 
 ### Algorithm
